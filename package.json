@@ -1,0 +1,26 @@
+{
+  "name": "fineco_portfolio_sync",
+  "version": "1.0.0",
+  "description": "read fineco back account stocks, and sync with... whatever it's a work in progress",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/magnum/fineco_portfolio_sync.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/magnum/fineco_portfolio_sync/issues"
+  },
+  "homepage": "https://github.com/magnum/fineco_portfolio_sync#readme",
+  "dependencies": {
+    "puppeteer": "^20.7.3"
+  },
+  "devDependencies": {
+    "serverless": "^3.32.2"
+  }
+}

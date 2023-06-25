@@ -1,20 +1,24 @@
 require 'rubygems'
-require 'mechanize'
-require 'nokogiri'
+require 'puppeteer-ruby'
 require 'json'
+require 'pry'
 
-a = Mechanize.new
-a.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-a.get('https://fineco.it/') do |page|
-  # Submit the login form
-  homepage_logged = page.form_with(:action => 'https://finecobank.com/portalelogin') do |f|
-    f.LOGIN = ENV['FINECO_USERNAME']
-    f.PASSWD = ENV['FINECO_PASSWORD']
-  end.click_button
-
-  json = JSON.parse(a.get("https://finecobank.com/portafoglio/i-miei-investimenti/json/portafoglio-elenco-json?sintesi=true").body)
-  json[0].each do |t|
-    value = t["qty"].to_i * t["avgPriceEur"].to_f
-    puts "#{t["titolo"]}, #{t["qty"]} x #{t["avgPriceEur"]} #{value}"
-  end
+Puppeteer.launch(headless: true) do |browser|
+  page = browser.new_page
+  page.goto("https://it.finecobank.com/login/")
+  #page.screenshot(path: "YusukeIwaki.png")
+  page.query_selector("input[name=LOGIN]").type_text(ENV["FINECO_USERNAME"])
+  page.query_selector("input[name=PASSWD]").type_text(ENV["FINECO_PASSWORD"])
+  cookies_btn = page.wait_for_selector("#onetrust-accept-btn-handler")
+  cookies_btn.click
+  page.wait_for_timeout(1000)
+  page.query_selector("[type=submit]").click
+  value1_selector = "#main-widget .col-8 .PUC-title-row .text-right.col-6 h3.graph-detail-title"
+  page.wait_for_selector(value1_selector)
+  #value1 = page.eval_on_selector(value1_selector, "el => el.innerText").to_f
+  json = page.goto("https://finecobank.com/portafoglio/i-miei-investimenti/json/portafoglio-elenco-json?sintesi=true").text
+  data = JSON.parse(json)
+  value1 = data.first.reduce(0){|sum, item| sum += item["marketValueSintesiEur"].to_f}
+  puts value1
 end
+
