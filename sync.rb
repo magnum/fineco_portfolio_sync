@@ -20,5 +20,8 @@ Puppeteer.launch(headless: true) do |browser|
   data = JSON.parse(json)
   value1 = data.first.reduce(0){|sum, item| sum += item["marketValueSintesiEur"].to_f}
   puts value1
+  content = page.goto("https://finecobank.com/conto-e-carte")
+  value = page.eval_on_selector(".show-available-balance span", "el => el.innerText").to_f
+  binding.pry
 end
 

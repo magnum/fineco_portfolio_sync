@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/magnum/fineco_portfolio_sync#readme",
   "dependencies": {
+    "pryjs": "^1.0.3",
     "puppeteer": "^20.7.3"
   },
   "devDependencies": {
